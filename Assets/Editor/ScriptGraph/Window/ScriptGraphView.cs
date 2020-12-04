@@ -18,9 +18,9 @@ namespace ScriptGraph.Window
 			this.AddManipulator(new SelectionDragger());
 			// ドラッグで範囲選択
 			this.AddManipulator(new RectangleSelector());
-
+			// ussファイルを読み込んでスタイルに追加
 			this.styleSheets.Add(Resources.Load<StyleSheet>("GraphViewBackGround"));
-
+			// 背景を一番後ろに追加
 			this.Insert(0, new GridBackground());
 		}
 	}
