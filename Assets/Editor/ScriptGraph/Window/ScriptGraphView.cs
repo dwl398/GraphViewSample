@@ -2,11 +2,23 @@
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 
+using ScriptGraph.Nodes;
+
 namespace ScriptGraph.Window
 {
 	public class ScriptGraphView : GraphView
 	{
 		public ScriptGraphView() : base()
+		{
+			Init();
+
+			this.Add(new MessageNode());
+		}
+
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		private void Init()
 		{
 			// 親のサイズに合わせてGraphViewのサイズを設定
 			this.StretchToParentSize();
