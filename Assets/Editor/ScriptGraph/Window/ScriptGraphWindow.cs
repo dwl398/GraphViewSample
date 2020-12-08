@@ -16,7 +16,7 @@ namespace ScriptGraph.Window
 
 		private void OnEnable()
 		{
-			var scriptGraph = new ScriptGraphView();
+			var scriptGraph = new ScriptGraphView(this);
 			this.rootVisualElement.Add(scriptGraph);
 		}
 	}
