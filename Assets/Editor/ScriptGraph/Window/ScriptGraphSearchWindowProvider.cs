@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 using ScriptGraph.Nodes;
 
 namespace ScriptGraph.Window
@@ -9,13 +10,19 @@ namespace ScriptGraph.Window
 	public class ScriptGraphSearchWindowProvider : ScriptableObject, ISearchWindowProvider
 	{
 		/// <summary>
+		/// ウィンドウ
+		/// </summary>
+		private ScriptGraphWindow _window;
+
+		/// <summary>
 		/// グラフビュー
 		/// </summary>
-		private ScriptGraphView _scriptGraphView;
+		private ScriptGraphView _graphView;
 
-		public void Init(ScriptGraphView scriptGraphView)
+		public void Init(ScriptGraphView scriptGraphView, ScriptGraphWindow scriptGraphWindow)
 		{
-			_scriptGraphView = scriptGraphView;
+			_graphView = scriptGraphView;
+			_window = scriptGraphWindow;
 		}
 
 		public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -23,7 +30,7 @@ namespace ScriptGraph.Window
 			var entries = new List<SearchTreeEntry>();
 			entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node")));
 
-			entries.Add(new SearchTreeEntry(new GUIContent("MessageNode")) { level = 1, userData = typeof(MessageNode)});
+			entries.Add(new SearchTreeEntry(new GUIContent(nameof(MessageNode))) { level = 1, userData = typeof(MessageNode)});
 
 			//foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 			//{
@@ -42,10 +49,15 @@ namespace ScriptGraph.Window
 
 		public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
 		{
-			var type = SearchTreeEntry.userData as System.Type;
+			var type = SearchTreeEntry.userData as Type;
 			var node = Activator.CreateInstance(type) as Node;
 
-			_scriptGraphView.AddElement(node);
+			var worldMousePosition = _window.rootVisualElement.ChangeCoordinatesTo(_window.rootVisualElement.parent, context.screenMousePosition - _window.position.position);
+			var localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);
+
+			node.SetPosition(new Rect(localMousePosition, new Vector2(100, 100)));
+
+			_graphView.AddElement(node);
 			return true;
 		}
 	}

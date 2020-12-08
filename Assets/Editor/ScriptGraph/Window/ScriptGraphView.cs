@@ -8,8 +8,12 @@ namespace ScriptGraph.Window
 {
 	public class ScriptGraphView : GraphView
 	{
-		public ScriptGraphView() : base()
+		private ScriptGraphWindow _window;
+
+		public ScriptGraphView(ScriptGraphWindow window) : base()
 		{
+			_window = window;
+
 			Init();
 		}
 
@@ -35,7 +39,7 @@ namespace ScriptGraph.Window
 
 			// 右クリックでノード作成するウィンドウ追加
 			var searchWindowProvider = ScriptableObject.CreateInstance<ScriptGraphSearchWindowProvider>();
-			searchWindowProvider.Init(this);
+			searchWindowProvider.Init(this, _window);
 			this.nodeCreationRequest += context =>
 			{
 				SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindowProvider);
