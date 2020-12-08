@@ -11,8 +11,6 @@ namespace ScriptGraph.Window
 		public ScriptGraphView() : base()
 		{
 			Init();
-
-			this.Add(new MessageNode());
 		}
 
 		/// <summary>
@@ -34,6 +32,14 @@ namespace ScriptGraph.Window
 			this.styleSheets.Add(Resources.Load<StyleSheet>("GraphViewBackGround"));
 			// 背景を一番後ろに追加
 			this.Insert(0, new GridBackground());
+
+			// 右クリックでノード作成するウィンドウ追加
+			var searchWindowProvider = ScriptableObject.CreateInstance<ScriptGraphSearchWindowProvider>();
+			searchWindowProvider.Init(this);
+			this.nodeCreationRequest += context =>
+			{
+				SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindowProvider);
+			};
 		}
 	}
 }
