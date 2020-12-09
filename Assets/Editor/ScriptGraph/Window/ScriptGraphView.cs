@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
-
 using ScriptGraph.Nodes;
+using System.Collections.Generic;
 
 namespace ScriptGraph.Window
 {
@@ -44,6 +44,27 @@ namespace ScriptGraph.Window
 			{
 				SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindowProvider);
 			};
+		}
+
+		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+		{
+			var compatiblePorts = new List<Port>();
+
+			foreach (var port in ports.ToList())
+			{
+				// 同じノードは繋げない
+				if (startPort.node == port.node) continue;
+
+				// Input - Input , Output - Outputは繋げない
+				if (startPort.direction == port.direction) continue;
+
+				// ポートタイプが違うものは繋げない
+				if (startPort.portType != port.portType) continue;
+
+				compatiblePorts.Add(port);
+			}
+
+			return compatiblePorts;
 		}
 	}
 }
