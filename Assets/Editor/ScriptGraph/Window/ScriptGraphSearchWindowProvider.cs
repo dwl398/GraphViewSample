@@ -30,19 +30,19 @@ namespace ScriptGraph.Window
 			var entries = new List<SearchTreeEntry>();
 			entries.Add(new SearchTreeGroupEntry(new GUIContent("Create Node")));
 
-			entries.Add(new SearchTreeEntry(new GUIContent(nameof(MessageNode))) { level = 1, userData = typeof(MessageNode)});
+			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				foreach (var type in assembly.GetTypes())
+				{
+					if (type.IsClass == false) continue;
 
-			//foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-			//{
-			//	foreach (var type in assembly.GetTypes())
-			//	{
-			//		if (type.IsClass && !type.IsAbstract && (type.IsSubclassOf(typeof(DialogEditorNode)))
-			//			&& type != typeof(RootNode))
-			//		{
-			//			entries.Add(new SearchTreeEntry(new GUIContent(type.Name)) { level = 1, userData = type });
-			//		}
-			//	}
-			//}
+					if (type.IsAbstract) continue;
+
+					if (type.IsSubclassOf(typeof(ScriptGraphNode)) == false) continue;
+
+					entries.Add(new SearchTreeEntry(new GUIContent(type.Name)) { level = 1, userData = type });
+				}
+			}
 
 			return entries;
 		}

@@ -6,7 +6,7 @@ using UnityEditor.Experimental.GraphView;
 
 namespace ScriptGraph.Nodes
 {
-	public class MessageNode : Node
+	public class MessageNode : ScriptGraphNode
 	{
 		private TextField textField;
 
