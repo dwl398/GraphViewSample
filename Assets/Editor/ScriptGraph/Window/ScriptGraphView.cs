@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using Unity.EditorCoroutines.Editor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
@@ -96,7 +98,17 @@ namespace ScriptGraph.Window
 
 		private void OnCreatedNode(ScriptGraphNode node)
 		{
+			EditorCoroutineUtility.StartCoroutine(OnCreateNodeDelayCall(node), this);
+		}
+
+		private IEnumerator OnCreateNodeDelayCall(ScriptGraphNode node)
+		{
+			yield return 0;
+
+			// 1フレーム遅らせる
 			_window.scriptGraphAsset.AddNode(ScriptNodeSerializer.Serialize(node));
+
+			yield return null;
 		}
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -193,7 +205,5 @@ namespace ScriptGraph.Window
 				}
 			}
 		}
-
-
 	}
 }
