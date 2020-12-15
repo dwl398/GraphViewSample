@@ -43,6 +43,8 @@ namespace ScriptGraph.Window
 
 					if (type.IsSubclassOf(typeof(ScriptGraphNode)) == false) continue;
 
+					if (type == typeof(RootNode)) continue;
+
 					entries.Add(new SearchTreeEntry(new GUIContent(type.Name)) { level = 1, userData = type });
 				}
 			}
