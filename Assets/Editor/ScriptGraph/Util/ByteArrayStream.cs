@@ -162,11 +162,11 @@ namespace ScriptGraph.Util
 					num = _buffer.Length * 2;
 				}
 
-				byte[] tmp = new byte[num];
+				byte[] temp = new byte[num];
 
-				Buffer.BlockCopy(_buffer, 0, tmp, 0, _position);
+				Buffer.BlockCopy(_buffer, 0, temp, 0, _position);
 
-				_buffer = tmp;
+				_buffer = temp;
 			}
 		}
 
