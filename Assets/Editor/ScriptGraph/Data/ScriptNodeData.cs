@@ -15,6 +15,6 @@ namespace ScriptGraph.Data
 
 		public int[] outIds;
 
-		public byte[] data;
+		public byte[] serialData;
 	}
 }

@@ -22,7 +22,7 @@ namespace ScriptGraph.Data
 		private static ScriptGraphNode CreateNode(ScriptNodeData data)
 		{
 			ScriptGraphNode node;
-			ByteArrayStream stream = new ByteArrayStream(data.data);
+			ByteArrayStream stream = new ByteArrayStream(data.serialData);
 			switch (data.type)
 			{
 				case NodeType.Root:

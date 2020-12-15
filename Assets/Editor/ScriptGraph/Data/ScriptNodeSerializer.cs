@@ -31,7 +31,7 @@ namespace ScriptGraph.Data
 					break;
 			}
 
-			data.data = stream.GetBuffer();
+			data.serialData = stream.GetBuffer();
 
 			return data;
 		}
