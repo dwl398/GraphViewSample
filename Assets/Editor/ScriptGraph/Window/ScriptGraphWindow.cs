@@ -21,6 +21,16 @@ namespace ScriptGraph.Window
 			this.Show();
 		}
 
+		private void OnEnable()
+		{
+			var window = GetWindow<ScriptGraphWindow>();
+
+			if (window != null)
+			{
+				window.Open(window.scriptGraphAsset);
+			}
+		}
+
 		/// <summary>
 		/// Unityで何らかのアセットを開いたときに呼ばれるコールバック
 		/// </summary>
