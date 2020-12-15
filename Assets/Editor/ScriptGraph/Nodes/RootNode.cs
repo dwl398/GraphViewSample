@@ -10,10 +10,5 @@ namespace ScriptGraph.Nodes
 
 			this.title = "Root";
 		}
-
-		public override void SetData(ScriptNodeData data)
-		{
-
-		}
 	}
 }

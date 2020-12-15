@@ -11,6 +11,8 @@ namespace ScriptGraph.Nodes
 	{
 		private TextField textField;
 
+		public string text { get { return textField.text; }set { textField.SetValueWithoutNotify(value); } }
+
 		public MessageNode()
 		{
 			nodeType = NodeType.Message;
@@ -36,11 +38,6 @@ namespace ScriptGraph.Nodes
 			textField.RegisterCallback<FocusOutEvent>(evt => { Input.imeCompositionMode = IMECompositionMode.Auto; });
 
 			this.mainContainer.Add(textField);
-		}
-
-		public override void SetData(ScriptNodeData data)
-		{
-
 		}
 	}
 }
