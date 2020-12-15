@@ -19,10 +19,13 @@ namespace ScriptGraph.Window
 		/// </summary>
 		private ScriptGraphView _graphView;
 
-		public void Init(ScriptGraphView scriptGraphView, ScriptGraphWindow scriptGraphWindow)
+		private Action<ScriptGraphNode> onCreated;
+
+		public void Init(ScriptGraphView scriptGraphView, ScriptGraphWindow scriptGraphWindow, Action<ScriptGraphNode> onCreated)
 		{
 			_graphView = scriptGraphView;
 			_window = scriptGraphWindow;
+			this.onCreated = onCreated;
 		}
 
 		public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -58,6 +61,9 @@ namespace ScriptGraph.Window
 			node.SetPosition(new Rect(localMousePosition, new Vector2(100, 100)));
 
 			_graphView.AddElement(node);
+
+			onCreated?.Invoke(node as ScriptGraphNode);
+
 			return true;
 		}
 	}

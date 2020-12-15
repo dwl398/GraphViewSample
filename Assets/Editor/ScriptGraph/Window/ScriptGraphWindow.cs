@@ -1,23 +1,75 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.Callbacks;
+using ScriptGraph.Data;
 
 namespace ScriptGraph.Window
 {
 	public class ScriptGraphWindow : EditorWindow
 	{
-		[MenuItem("Tool/ScriptGraph")]
-		public static void Open()
-		{
-			ScriptGraphWindow window = GetWindow<ScriptGraphWindow>();
-			window.Show();
+		public ScriptGraphAsset scriptGraphAsset;
 
-			window.titleContent = new GUIContent("ScriptGraph");
+		private ScriptGraphView graphView;
+
+		public void Open(ScriptGraphAsset scriptGraphAsset)
+		{
+			this.scriptGraphAsset = scriptGraphAsset;
+
+			graphView = new ScriptGraphView(this);
+			this.rootVisualElement.Add(graphView);
+
+			this.Show();
 		}
 
-		private void OnEnable()
+		/// <summary>
+		/// Unityで何らかのアセットを開いたときに呼ばれるコールバック
+		/// </summary>
+		/// <param name="instanceId"></param>
+		/// <param name="line"></param>
+		/// <returns></returns>
+		[OnOpenAsset()]
+		public static bool OnOpenAsset(int instanceId, int line)
 		{
-			var scriptGraph = new ScriptGraphView(this);
-			this.rootVisualElement.Add(scriptGraph);
+			if (EditorUtility.InstanceIDToObject(instanceId) is ScriptGraphAsset)
+			{
+				var scriptGraphAsset = EditorUtility.InstanceIDToObject(instanceId) as ScriptGraphAsset;
+
+				if (HasOpenInstances<ScriptGraphWindow>())
+				{
+					var window = GetWindow<ScriptGraphWindow>(scriptGraphAsset.name, typeof(SceneView));
+
+					if (window.scriptGraphAsset == null)
+					{
+						window.Open(scriptGraphAsset);
+						return true;
+					}
+
+					if (window.scriptGraphAsset.GetInstanceID() == scriptGraphAsset.GetInstanceID())
+					{
+						window.Focus();
+						return false;
+					}
+					else
+					{
+						// TODO:切り替え前に保存
+						window.Open(scriptGraphAsset);
+						window.titleContent.text = scriptGraphAsset.name;
+						window.Focus();
+						return false;
+					}
+				}
+				else
+				{
+					// 新規window作成
+					var window = GetWindow<ScriptGraphWindow>(scriptGraphAsset.name, typeof(SceneView));
+
+					window.Open(scriptGraphAsset);
+					return true;
+				}
+			}
+
+			return false;
 		}
+
 	}
 }

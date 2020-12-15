@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using UnityEditor.Experimental.GraphView;
+using ScriptGraph.Data;
 
 namespace ScriptGraph.Nodes
 {
@@ -12,6 +13,8 @@ namespace ScriptGraph.Nodes
 
 		public MessageNode()
 		{
+			nodeType = NodeType.Message;
+
 			// ノードのタイトル設定
 			this.title = "Message";
 
@@ -33,6 +36,11 @@ namespace ScriptGraph.Nodes
 			textField.RegisterCallback<FocusOutEvent>(evt => { Input.imeCompositionMode = IMECompositionMode.Auto; });
 
 			this.mainContainer.Add(textField);
+		}
+
+		public override void SetData(ScriptNodeData data)
+		{
+
 		}
 	}
 }
