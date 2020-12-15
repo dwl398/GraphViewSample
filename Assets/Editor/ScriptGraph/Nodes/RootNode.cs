@@ -9,6 +9,10 @@ namespace ScriptGraph.Nodes
 			nodeType = NodeType.Root;
 
 			this.title = "Root";
+
+			var outputOort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(Port));
+			outputOort.portName = "Out";
+			outputContainer.Add(outputOort);
 		}
 	}
 }
