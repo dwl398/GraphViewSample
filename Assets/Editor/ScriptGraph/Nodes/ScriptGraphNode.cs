@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 
 namespace ScriptGraph.Nodes
@@ -16,6 +17,8 @@ namespace ScriptGraph.Nodes
 		public Port inputPort;
 
 		public List<Port> outputPorts = new List<Port>();
+
+		public Action<ScriptGraphNode> onNodeContentChanged;
 
 		protected void CreateInputPort(string name)
 		{

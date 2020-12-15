@@ -41,6 +41,7 @@ namespace ScriptGraph.Window
 			foreach (var data in asset.list)
 			{
 				ScriptGraphNode node = ScriptNodeDeserializer.Deserialze(data);
+				node.onNodeContentChanged = OnNodeContentChanged;
 				this.AddElement(node);
 				tempNodeList.Add(node);
 			}
@@ -103,7 +104,7 @@ namespace ScriptGraph.Window
 
 			// 右クリックでノード作成するウィンドウ追加
 			var searchWindowProvider = ScriptableObject.CreateInstance<ScriptGraphSearchWindowProvider>();
-			searchWindowProvider.Init(this, _window, OnCreatedNode);
+			searchWindowProvider.Init(this, _window, OnCreatedNode, OnNodeContentChanged);
 			this.nodeCreationRequest += context =>
 			{
 				SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindowProvider);
@@ -144,6 +145,11 @@ namespace ScriptGraph.Window
 			_window.scriptGraphAsset.AddNode(ScriptNodeSerializer.Serialize(node));
 
 			yield return null;
+		}
+
+		private void OnNodeContentChanged(ScriptGraphNode node)
+		{
+			_window.scriptGraphAsset.UpdateNode(ScriptNodeSerializer.Serialize(node));
 		}
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)

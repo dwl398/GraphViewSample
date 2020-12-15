@@ -21,11 +21,14 @@ namespace ScriptGraph.Window
 
 		private Action<ScriptGraphNode> onCreated;
 
-		public void Init(ScriptGraphView scriptGraphView, ScriptGraphWindow scriptGraphWindow, Action<ScriptGraphNode> onCreated)
+		private Action<ScriptGraphNode> onNodeContentChanged;
+
+		public void Init(ScriptGraphView scriptGraphView, ScriptGraphWindow scriptGraphWindow, Action<ScriptGraphNode> onCreated, Action<ScriptGraphNode> onNodeContentChanged)
 		{
 			_graphView = scriptGraphView;
 			_window = scriptGraphWindow;
 			this.onCreated = onCreated;
+			this.onNodeContentChanged = onNodeContentChanged;
 		}
 
 		public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -57,6 +60,7 @@ namespace ScriptGraph.Window
 			var type = SearchTreeEntry.userData as Type;
 			var node = Activator.CreateInstance(type) as ScriptGraphNode;
 			node.id = _window.scriptGraphAsset.NextId;
+			node.onNodeContentChanged = onNodeContentChanged;
 
 			var worldMousePosition = _window.rootVisualElement.ChangeCoordinatesTo(_window.rootVisualElement.parent, context.screenMousePosition - _window.position.position);
 			var localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);

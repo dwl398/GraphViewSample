@@ -1,5 +1,6 @@
-﻿using UnityEditor.UIElements;
-using UnityEditor.Experimental.GraphView;
+﻿using System;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 
 namespace ScriptGraph.Nodes
 {
@@ -30,6 +31,13 @@ namespace ScriptGraph.Nodes
 
 			enumField = new EnumField(Flag.False);
 			contentContainer.Add(enumField);
+
+			enumField.RegisterValueChangedCallback(OnValueChanged);
+		}
+
+		private void OnValueChanged(ChangeEvent<Enum> evt)
+		{
+			onNodeContentChanged?.Invoke(this);
 		}
 	}
 }

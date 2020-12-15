@@ -1,6 +1,4 @@
-﻿using UnityEditor.Experimental.GraphView;
-
-namespace ScriptGraph.Nodes
+﻿namespace ScriptGraph.Nodes
 {
 	public class RootNode : ScriptGraphNode
 	{

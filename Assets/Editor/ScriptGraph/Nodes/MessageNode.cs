@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 
 namespace ScriptGraph.Nodes
 {
@@ -30,6 +29,13 @@ namespace ScriptGraph.Nodes
 			textField.RegisterCallback<FocusOutEvent>(evt => { Input.imeCompositionMode = IMECompositionMode.Auto; });
 
 			this.mainContainer.Add(textField);
+
+			textField.RegisterValueChangedCallback(OnValueChanged);
+		}
+
+		private void OnValueChanged(ChangeEvent<string> evt)
+		{
+			onNodeContentChanged?.Invoke(this);
 		}
 	}
 }
