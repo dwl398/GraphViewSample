@@ -17,14 +17,9 @@ namespace ScriptGraph.Nodes
 			// ノードのタイトル設定
 			this.title = "Message";
 
-			// ポート（後述）を作成
-			var inputPort = Port.Create<Edge>(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(Port));
-			inputPort.portName = "In";
-			inputContainer.Add(inputPort);
+			CreateInputPort("In");
 
-			var outputOort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(Port));
-			outputOort.portName = "Out";
-			outputContainer.Add(outputOort);
+			AddOutputPort("Out");
 
 			// メイン部分に入力欄追加
 			textField = new TextField();

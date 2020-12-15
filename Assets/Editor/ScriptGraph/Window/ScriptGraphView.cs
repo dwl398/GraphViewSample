@@ -36,12 +36,47 @@ namespace ScriptGraph.Window
 
 		private void Load(ScriptGraphAsset asset)
 		{
-			foreach(var data in asset.list)
+			var tempNodeList = new List<ScriptGraphNode>(asset.list.Count);
+
+			foreach (var data in asset.list)
 			{
-				this.AddElement(ScriptNodeDeserializer.Deserialze(data));
+				ScriptGraphNode node = ScriptNodeDeserializer.Deserialze(data);
+				this.AddElement(node);
+				tempNodeList.Add(node);
 			}
 
-			// TODO:エッジ
+			foreach (ScriptGraphNode nodeLeft in tempNodeList)
+			{
+				int portIndex = 0;
+
+				for (int i = 0; i < nodeLeft.outIds.Count; ++i)
+				{
+					int outputId = nodeLeft.outIds[i];
+
+					if (outputId <= 0)
+					{
+						portIndex++;
+						continue;
+					}
+
+					foreach (ScriptGraphNode nodeRight in tempNodeList)
+					{
+						if (outputId == nodeRight.id)
+						{
+							Edge edge = new Edge()
+							{
+								output = nodeLeft.outputPorts[portIndex++],
+								input = nodeRight.inputPort
+							};
+
+							edge.output.Connect(edge);
+							edge.input.Connect(edge);
+
+							AddElement(edge);
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -192,13 +227,14 @@ namespace ScriptGraph.Window
 
 				if (outputNode.outIds.Contains(inputNode.id) == false)
 				{
-					if (outputNode.outIds.Count <= edge.output.tabIndex)
+					int portIndex = (int)edge.output.userData;
+					if (outputNode.outIds.Count <= portIndex)
 					{
-						outputNode.outIds.Insert(edge.output.tabIndex, inputNode.id);
+						outputNode.outIds.Insert(portIndex, inputNode.id);
 					}
 					else
 					{
-						outputNode.outIds[edge.output.tabIndex] = inputNode.id;
+						outputNode.outIds[portIndex] = inputNode.id;
 					}
 
 					_window.scriptGraphAsset.UpdateNode(ScriptNodeSerializer.Serialize(outputNode));
