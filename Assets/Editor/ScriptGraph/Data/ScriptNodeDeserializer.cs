@@ -37,6 +37,14 @@ namespace ScriptGraph.Data
 						temp.text = stream.ReadString();
 					}
 					break;
+				case NodeType.Branch:
+					{
+						node = new BranchNode();
+						var temp = node as BranchNode;
+						temp.flag = stream.ReadBool();
+					}
+					break;
+				case NodeType.None:
 				default:
 					node = null;
 					break;

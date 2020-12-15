@@ -7,5 +7,7 @@
 		Root = 1,
 
 		Message = 2,
+
+		Branch = 3,
 	}
 }

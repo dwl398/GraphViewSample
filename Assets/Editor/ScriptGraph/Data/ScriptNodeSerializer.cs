@@ -23,6 +23,9 @@ namespace ScriptGraph.Data
 				case NodeType.Message:
 					Serialize(node as MessageNode, ref stream);
 					break;
+				case NodeType.Branch:
+					Serialize(node as BranchNode, ref stream);
+					break;
 				case NodeType.None:
 				default:
 					{
@@ -39,6 +42,11 @@ namespace ScriptGraph.Data
 		private static void Serialize(MessageNode node,ref ByteArrayStream stream)
 		{
 			stream.WriteString(node.text);
+		}
+
+		private static void Serialize(BranchNode node, ref ByteArrayStream stream)
+		{
+			stream.WriteBool(node.flag);
 		}
 	}
 }
