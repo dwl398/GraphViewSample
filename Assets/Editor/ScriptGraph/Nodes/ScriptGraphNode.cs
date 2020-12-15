@@ -12,6 +12,6 @@ namespace ScriptGraph.Nodes
 
 		public NodeType Type => nodeType;
 
-		public List<int> outIds;
+		public List<int> outIds = new List<int>();
 	}
 }

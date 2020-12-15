@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using ScriptGraph.Nodes;
-using System.Collections.Generic;
+using ScriptGraph.Data;
 
 namespace ScriptGraph.Window
 {
@@ -17,13 +18,28 @@ namespace ScriptGraph.Window
 			if (_window.scriptGraphAsset == null || _window.scriptGraphAsset.rootNode == null)
 			{
 				var rootNode = new RootNode();
+				rootNode.id = 1;
 
 				this.AddElement(rootNode);
 
-				// _window.scriptGraphAsset.AddNode();
+				OnCreatedNode(rootNode);
+			}
+			else
+			{
+				Load(_window.scriptGraphAsset);
 			}
 
 			Init();
+		}
+
+		private void Load(ScriptGraphAsset asset)
+		{
+			foreach(var data in asset.list)
+			{
+				this.AddElement(ScriptNodeDeserializer.Deserialze(data));
+			}
+
+			// TODO:エッジ
 		}
 
 		/// <summary>
@@ -45,6 +61,8 @@ namespace ScriptGraph.Window
 			this.styleSheets.Add(Resources.Load<StyleSheet>("GraphViewBackGround"));
 			// 背景を一番後ろに追加
 			this.Insert(0, new GridBackground());
+
+			this.graphViewChanged += OnGraphViewChanged;
 
 			// 右クリックでノード作成するウィンドウ追加
 			var searchWindowProvider = ScriptableObject.CreateInstance<ScriptGraphSearchWindowProvider>();
@@ -78,7 +96,7 @@ namespace ScriptGraph.Window
 
 		private void OnCreatedNode(ScriptGraphNode node)
 		{
-
+			_window.scriptGraphAsset.AddNode(ScriptNodeSerializer.Serialize(node));
 		}
 
 		private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -101,7 +119,8 @@ namespace ScriptGraph.Window
 				if (element is ScriptGraphNode)
 				{
 					var node = element as ScriptGraphNode;
-					// _dialogGraphAsset.UpdateNode(node.ToSerializableNode());
+
+					_window.scriptGraphAsset.UpdateNode(ScriptNodeSerializer.Serialize(node));
 				}
 			}
 		}
@@ -119,20 +138,19 @@ namespace ScriptGraph.Window
 					var inputNode = edge.input.node as ScriptGraphNode;
 					var outputNode = edge.output.node as ScriptGraphNode;
 
-					//if (outputNode.outIds.Contains(inputNode.Id))
-					//{
-					//	for (int i = 0; i < outputNode.outIds.Count; ++i)
-					//	{
-					//		if (outputNode.outIds[i] == inputNode.Id)
-					//		{
-					//			outputNode.outIds[i] = 0;
-					//			break;
-					//		}
-					//	}
+					if (outputNode.outIds.Contains(inputNode.id))
+					{
+						for (int i = 0; i < outputNode.outIds.Count; ++i)
+						{
+							if (outputNode.outIds[i] == inputNode.id)
+							{
+								outputNode.outIds[i] = 0;
+								break;
+							}
+						}
 
-					//	// データ更新
-					//	_dialogGraphAsset.UpdateNode(outputNode.ToSerializableNode());
-					//}
+						_window.scriptGraphAsset.UpdateNode(ScriptNodeSerializer.Serialize(outputNode));
+					}
 				}
 			}
 
@@ -141,7 +159,8 @@ namespace ScriptGraph.Window
 				if (element is ScriptGraphNode)
 				{
 					var node = element as ScriptGraphNode;
-					//_dialogGraphAsset.RemoveById(node.Id);
+
+					_window.scriptGraphAsset.RemoveNode(node.id);
 				}
 			}
 		}
@@ -159,21 +178,18 @@ namespace ScriptGraph.Window
 				var inputNode = edge.input.node as ScriptGraphNode;
 				var outputNode = edge.output.node as ScriptGraphNode;
 
-				// 重複判定
 				if (outputNode.outIds.Contains(inputNode.id) == false)
 				{
-					// データがまだない
 					if (outputNode.outIds.Count <= edge.output.tabIndex)
 					{
 						outputNode.outIds.Insert(edge.output.tabIndex, inputNode.id);
 					}
 					else
 					{
-						// あるなら更新
 						outputNode.outIds[edge.output.tabIndex] = inputNode.id;
 					}
-					// データ更新
-					// _dialogGraphAsset.UpdateNode(outputNode.ToSerializableNode());
+
+					_window.scriptGraphAsset.UpdateNode(ScriptNodeSerializer.Serialize(outputNode));
 				}
 			}
 		}

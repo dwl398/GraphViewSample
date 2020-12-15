@@ -53,7 +53,8 @@ namespace ScriptGraph.Window
 		public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
 		{
 			var type = SearchTreeEntry.userData as Type;
-			var node = Activator.CreateInstance(type) as Node;
+			var node = Activator.CreateInstance(type) as ScriptGraphNode;
+			node.id = _window.scriptGraphAsset.NextId;
 
 			var worldMousePosition = _window.rootVisualElement.ChangeCoordinatesTo(_window.rootVisualElement.parent, context.screenMousePosition - _window.position.position);
 			var localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);

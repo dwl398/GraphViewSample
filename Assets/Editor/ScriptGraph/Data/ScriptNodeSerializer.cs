@@ -6,8 +6,14 @@ namespace ScriptGraph.Data
 {
 	public static class ScriptNodeSerializer
 	{
-		public static byte[] Serialize(ScriptGraphNode node)
+		public static ScriptNodeData Serialize(ScriptGraphNode node)
 		{
+			ScriptNodeData data = new ScriptNodeData();
+			data.id = node.id;
+			data.type = node.Type;
+			data.outIds = node.outIds.ToArray();
+			data.rect = node.GetPosition();
+
 			ByteArrayStream stream = new ByteArrayStream();
 
 			switch (node.Type)
@@ -25,7 +31,9 @@ namespace ScriptGraph.Data
 					break;
 			}
 
-			return stream.GetBuffer();
+			data.data = stream.GetBuffer();
+
+			return data;
 		}
 
 		private static void Serialize(MessageNode node,ref ByteArrayStream stream)

@@ -13,6 +13,7 @@ namespace ScriptGraph.Util
 
 		public ByteArrayStream()
 		{
+			_buffer = new byte[0];
 		}
 
 		public ByteArrayStream(int capacity)

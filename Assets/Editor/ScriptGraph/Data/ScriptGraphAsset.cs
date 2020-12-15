@@ -34,6 +34,15 @@ namespace ScriptGraph.Data
 
 		public void AddNode(ScriptNodeData node)
 		{
+			for (int i = 0; i < list.Count; ++i)
+			{
+				if (list[i].id == node.id)
+				{
+					list[i] = node;
+					return;
+				}
+			}
+
 			list.Add(node);
 		}
 

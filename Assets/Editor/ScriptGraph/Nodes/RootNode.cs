@@ -6,7 +6,7 @@ namespace ScriptGraph.Nodes
 	{
 		public RootNode()
 		{
-			nodeType = NodeType.None;
+			nodeType = NodeType.Root;
 
 			this.title = "Root";
 		}
