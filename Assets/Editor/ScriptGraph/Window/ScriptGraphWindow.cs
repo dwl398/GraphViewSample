@@ -10,6 +10,8 @@ namespace ScriptGraph.Window
 
 		private ScriptGraphView graphView;
 
+		private bool isFirst = true;
+
 		public void Open(ScriptGraphAsset scriptGraphAsset)
 		{
 			this.scriptGraphAsset = scriptGraphAsset;
@@ -22,6 +24,12 @@ namespace ScriptGraph.Window
 
 		private void OnEnable()
 		{
+			if(isFirst)
+			{
+				isFirst = false;
+				return;
+			}
+
 			var window = GetWindow<ScriptGraphWindow>();
 
 			if (window != null)
